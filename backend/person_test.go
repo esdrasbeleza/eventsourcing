@@ -6,6 +6,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func Test_NewPerson_HasAnId(t *testing.T) {
+	person := NewPerson()
+
+	assert.NotEmpty(t, person.Id.String())
+}
+
 func Test_ChangePersonNameWorks(t *testing.T) {
 	var (
 		event  = ChangePersonName{Name: "Esdras"}

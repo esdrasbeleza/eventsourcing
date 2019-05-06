@@ -1,6 +1,9 @@
 package main
 
+import "github.com/google/uuid"
+
 type Person struct {
+	Id      uuid.UUID
 	Name    string
 	Email   string
 	Address map[string]interface{}
@@ -8,6 +11,12 @@ type Person struct {
 
 type PersonEvent interface {
 	Apply(person *Person)
+}
+
+func NewPerson() *Person {
+	return &Person{
+		Id: uuid.New(),
+	}
 }
 
 func GetPerson(events []PersonEvent) *Person {
