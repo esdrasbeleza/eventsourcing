@@ -32,3 +32,13 @@ func Test_AddAddressWorks(t *testing.T) {
 
 	assert.Equal(t, "Some address", person.Address["Home"])
 }
+
+func Test_RemoveAddress(t *testing.T) {
+	var (
+		event1 = AddAddress{Name: "Home", Address: "Some address"}
+		event2 = RemoveAddress{Name: "Home"}
+		person = GetPerson([]PersonEvent{event1, event2})
+	)
+
+	assert.Nil(t, person.Address["Home"])
+}
