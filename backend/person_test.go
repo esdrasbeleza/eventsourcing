@@ -8,8 +8,8 @@ import (
 
 func Test_CreatePersonGivesUsAName(t *testing.T) {
 	var (
-		event  = CreatePerson{Name: "Esdras"}
-		person = GetPerson([]CreatePerson{event})
+		event  = ChangePersonName{Name: "Esdras"}
+		person = GetPerson([]ChangePersonName{event})
 	)
 
 	assert.Equal(t, "Esdras", person.Name)
