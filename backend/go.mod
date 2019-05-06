@@ -1,4 +1,4 @@
-module github.com/esdrasbeleza/eventsourcing/backend
+module github.com/esdrasbeleza/eventsourcing/eventsourcing
 
 go 1.12
 
