@@ -7,7 +7,7 @@ var typeMap map[string]func() PersonEvent
 func generateTypeMap() {
 	typeMap = make(map[string]func() PersonEvent)
 
-	typeMap["AddAddress"] = func() PersonEvent { return &AddEmail{} }
+	typeMap["AddAddress"] = func() PersonEvent { return &AddAddress{} }
 	typeMap["AddEmail"] = func() PersonEvent { return &AddEmail{} }
 	typeMap["ChangePersonName"] = func() PersonEvent { return &ChangePersonName{} }
 	typeMap["RemoveAddress"] = func() PersonEvent { return &RemoveAddress{} }
