@@ -1,4 +1,4 @@
-package main
+package person
 
 import "github.com/google/uuid"
 
@@ -7,10 +7,6 @@ type Person struct {
 	Name    string
 	Email   string
 	Address map[string]interface{}
-}
-
-type PersonEvent interface {
-	Apply(person *Person)
 }
 
 func NewPerson() *Person {
