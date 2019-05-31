@@ -5,6 +5,10 @@ type AddAddress struct {
 	Address string
 }
 
+func (event AddAddress) Type() string {
+	return "AddAddress"
+}
+
 func (event AddAddress) Apply(person *Person) {
 	if person.Address == nil {
 		person.Address = make(map[string]interface{})
