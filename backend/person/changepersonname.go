@@ -7,3 +7,7 @@ type ChangePersonName struct {
 func (event ChangePersonName) Apply(person *Person) {
 	person.Name = event.Name
 }
+
+func (event ChangePersonName) JSON() []byte {
+	return outputJSON(event)
+}

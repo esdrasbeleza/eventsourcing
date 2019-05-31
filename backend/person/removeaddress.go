@@ -12,3 +12,7 @@ func (e RemoveAddress) Apply(person *Person) {
 
 	delete(person.Address, e.Name)
 }
+
+func (event RemoveAddress) JSON() []byte {
+	return outputJSON(event)
+}

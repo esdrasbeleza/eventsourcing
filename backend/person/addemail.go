@@ -7,3 +7,7 @@ type AddEmail struct {
 func (event AddEmail) Apply(person *Person) {
 	person.Email = event.Email
 }
+
+func (event AddEmail) JSON() []byte {
+	return outputJSON(event)
+}

@@ -12,3 +12,7 @@ func (event AddAddress) Apply(person *Person) {
 
 	person.Address[event.Name] = event.Address
 }
+
+func (event AddAddress) JSON() []byte {
+	return outputJSON(event)
+}

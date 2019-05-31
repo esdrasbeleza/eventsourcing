@@ -1,17 +1,24 @@
 package person
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
+var sampleRemoveAddressEvent = RemoveAddress{Name: "Home"}
+
 func Test_RemoveAddress(t *testing.T) {
-	var (
-		event1 = AddAddress{Name: "Home", Address: "Some address"}
-		event2 = RemoveAddress{Name: "Home"}
-		person = GetPerson([]PersonEvent{event1, event2})
-	)
+	person := GetPerson([]PersonEvent{sampleAddAddressEvent, sampleRemoveAddressEvent})
 
 	assert.Nil(t, person.Address["Home"])
+}
+
+func Test_RemoveAddress_JSON(t *testing.T) {
+	expected, _ := json.Marshal(map[string]interface{}{
+		"Name": "Home",
+	})
+
+	assert.JSONEq(t, string(expected), string(sampleRemoveAddressEvent.JSON()))
 }
