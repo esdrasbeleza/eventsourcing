@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/esdrasbeleza/eventsourcing/eventsourcing/person"
+	"github.com/esdrasbeleza/eventsourcing/backend/person"
 	"github.com/google/uuid"
 )
 

@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/esdrasbeleza/eventsourcing/eventsourcing/person"
-	"github.com/esdrasbeleza/eventsourcing/eventsourcing/storage"
+	"github.com/esdrasbeleza/eventsourcing/backend/person"
+	"github.com/esdrasbeleza/eventsourcing/backend/storage"
 
 	"github.com/google/uuid"
 )

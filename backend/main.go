@@ -1,6 +1,6 @@
 package main
 
-import "github.com/esdrasbeleza/eventsourcing/eventsourcing/application"
+import "github.com/esdrasbeleza/eventsourcing/backend/application"
 
 func main() {
 	application.Start()

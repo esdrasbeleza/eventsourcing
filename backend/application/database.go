@@ -3,7 +3,7 @@ package application
 import (
 	"database/sql"
 
-	"github.com/esdrasbeleza/eventsourcing/eventsourcing/storage"
+	"github.com/esdrasbeleza/eventsourcing/backend/storage"
 )
 
 func DB() *sql.DB {

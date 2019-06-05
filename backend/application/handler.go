@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"net/http"
 
-	"github.com/esdrasbeleza/eventsourcing/eventsourcing/controller"
-	"github.com/esdrasbeleza/eventsourcing/eventsourcing/storage"
+	"github.com/esdrasbeleza/eventsourcing/backend/controller"
+	"github.com/esdrasbeleza/eventsourcing/backend/storage"
 	"github.com/gorilla/mux"
 
 	_ "github.com/lib/pq"

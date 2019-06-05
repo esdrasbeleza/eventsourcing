@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/esdrasbeleza/eventsourcing/eventsourcing/storage"
+	"github.com/esdrasbeleza/eventsourcing/backend/storage"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
