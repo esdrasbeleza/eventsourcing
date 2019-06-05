@@ -96,3 +96,6 @@ Temporary Items
 # Ignore all local history of files
 .history
 
+# Ignore binary
+eventsourcing
+
