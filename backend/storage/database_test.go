@@ -1,4 +1,4 @@
-package main
+package storage
 
 import (
 	"testing"
@@ -11,9 +11,10 @@ import (
 
 func Test_CanStoreEvent(t *testing.T) {
 	var (
+		dbStorage = NewDatabaseStorage(db)
 		personId         = uuid.New()
 		changePersonName = person.ChangePersonName{Name: "Esdras"}
-		err              = StoreEvent(db, personId, changePersonName)
+		err              = dbStorage.StoreEvent(personId, changePersonName)
 	)
 
 	assert.Nil(t, err)
@@ -21,6 +22,8 @@ func Test_CanStoreEvent(t *testing.T) {
 
 func Test_Can_FetchEvents(t *testing.T) {
 	var (
+		dbStorage = NewDatabaseStorage(db)
+
 		personId = uuid.New()
 		event1   = person.ChangePersonName{Name: "Esdras"}
 		event2   = person.AddEmail{Email: "test@test.com"}
@@ -28,12 +31,12 @@ func Test_Can_FetchEvents(t *testing.T) {
 		event4   = person.AddAddress{Name: "Work", Address: "My work address"}
 	)
 
-	StoreEvent(db, personId, event1)
-	StoreEvent(db, personId, event2)
-	StoreEvent(db, personId, event3)
-	StoreEvent(db, personId, event4)
+	dbStorage.StoreEvent(personId, event1)
+	dbStorage.StoreEvent(personId, event2)
+	dbStorage.StoreEvent(personId, event3)
+	dbStorage.StoreEvent(personId, event4)
 
-	person, err := FetchPerson(db, personId)
+	person, err := dbStorage.FetchPerson(personId)
 
 	assert.Nil(t, err)
 

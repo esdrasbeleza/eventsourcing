@@ -6,16 +6,13 @@ import (
 	"net/http"
 
 	"github.com/esdrasbeleza/eventsourcing/eventsourcing/person"
+	"github.com/esdrasbeleza/eventsourcing/eventsourcing/storage"
+	
 	"github.com/google/uuid"
 )
 
-type PersonStorage interface {
-	StoreEvent(personId uuid.UUID, event person.PersonEvent) error
-	FetchPerson(personId uuid.UUID) (*person.Person, error)
-}
-
 type PersonController struct {
-	storage PersonStorage
+	storage storage.Person
 }
 
 func (c *PersonController) CreatePerson(w http.ResponseWriter, r *http.Request) {
