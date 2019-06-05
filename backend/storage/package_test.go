@@ -11,31 +11,20 @@ import (
 var db *sql.DB
 
 func TestMain(m *testing.M) {
-	defer testShutdown()
-	testSetup()
+	defer afterTests()
+	beforeTests()
 	code := m.Run()
 	os.Exit(code)
 }
 
-func testSetup() {
-	connectToTestDB()
+func beforeTests() {
+	db = ConnectToDB("postgres://postgres:docker@localhost/postgres?sslmode=disable")
 	checkConnection()
 }
 
-func testShutdown() {
+func afterTests() {
 	if db != nil {
 		db.Close()
-	}
-}
-
-func connectToTestDB() {
-	connStr := "postgres://postgres:docker@localhost/postgres?sslmode=disable"
-
-	var err error
-	db, err = sql.Open("postgres", connStr)
-
-	if err != nil {
-		panic(err)
 	}
 }
 

@@ -9,6 +9,16 @@ import (
 	"github.com/google/uuid"
 )
 
+func ConnectToDB(connectionString string) *sql.DB {
+	db, err := sql.Open("postgres", connectionString)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return db
+}
+
 type DatabaseStorage struct {
 	db *sql.DB
 }

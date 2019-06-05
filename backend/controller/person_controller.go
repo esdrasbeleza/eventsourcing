@@ -12,7 +12,7 @@ import (
 )
 
 type PersonController struct {
-	storage storage.Person
+	Storage storage.Person
 }
 
 func (c *PersonController) CreatePerson(w http.ResponseWriter, r *http.Request) {
@@ -39,7 +39,7 @@ func (c *PersonController) CreatePerson(w http.ResponseWriter, r *http.Request) 
 		addEmail   = person.AddEmail{Email: input.Email}
 	)
 
-	if err := c.storage.StoreEvent(uuid, changeName, addEmail); err != nil {
+	if err := c.Storage.StoreEvent(uuid, changeName, addEmail); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
