@@ -28,8 +28,7 @@
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
 
-.vscode/*
-!.vscode/settings.json
+.vscode/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
@@ -87,4 +86,13 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Ignore all local history of files
+.history
 
