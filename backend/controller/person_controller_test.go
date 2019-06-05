@@ -9,14 +9,8 @@ import (
 
 	"github.com/esdrasbeleza/eventsourcing/eventsourcing/storage"
 	"github.com/google/uuid"
-	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 )
-
-func router() *mux.Router {
-	router := mux.NewRouter()
-	return router
-}
 
 func Test_ItCanCreateAPerson(t *testing.T) {
 	var (
