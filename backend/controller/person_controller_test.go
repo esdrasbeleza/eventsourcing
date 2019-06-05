@@ -23,8 +23,12 @@ func Test_ItCanCreateAPerson(t *testing.T) {
 		storage    = storage.NewMemoryStorage()
 		controller = &PersonController{storage}
 
-		requestBody, _ = json.Marshal(map[string]string{"Name": "Esdras"})
-		request, _     = http.NewRequest(http.MethodPost, "/person", bytes.NewReader(requestBody))
+		requestBody, _ = json.Marshal(map[string]string{
+			"Name":  "Esdras",
+			"Email": "test@test.com",
+		})
+
+		request, _ = http.NewRequest(http.MethodPost, "/person", bytes.NewReader(requestBody))
 
 		recorder = httptest.NewRecorder()
 	)
@@ -36,6 +40,7 @@ func Test_ItCanCreateAPerson(t *testing.T) {
 	var responseJSON map[string]string
 	json.Unmarshal(recorder.Body.Bytes(), &responseJSON)
 
-	assert.Equal(t, "Esdras", responseJSON["Name"])
 	assert.NotPanics(t, func() { uuid.MustParse(responseJSON["Id"]) })
+	assert.Equal(t, "Esdras", responseJSON["Name"])
+	assert.Equal(t, "test@test.com", responseJSON["Email"])
 }

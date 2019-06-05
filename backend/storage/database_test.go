@@ -31,10 +31,8 @@ func Test_Can_FetchEvents(t *testing.T) {
 		event4   = person.AddAddress{Name: "Work", Address: "My work address"}
 	)
 
-	dbStorage.StoreEvent(personId, event1)
-	dbStorage.StoreEvent(personId, event2)
-	dbStorage.StoreEvent(personId, event3)
-	dbStorage.StoreEvent(personId, event4)
+	
+	dbStorage.StoreEvent(personId, event1, event2, event3, event4)
 
 	person, err := dbStorage.FetchPerson(personId)
 

@@ -17,14 +17,30 @@ func NewDatabaseStorage(db *sql.DB) *DatabaseStorage {
 	return &DatabaseStorage{db}
 }
 
-func (s *DatabaseStorage) StoreEvent(personId uuid.UUID, event person.PersonEvent) error {
+func (s *DatabaseStorage) StoreEvent(personId uuid.UUID, events ...person.PersonEvent) error {
 	var (
 		sqlStatement = "INSERT INTO person_events (id, person_id, event_type, timestamp, data) VALUES ($1, $2, $3, $4, $5)"
-		data         = event.JSON()
-		_, err       = s.db.Exec(sqlStatement, uuid.New(), personId, event.Type(), time.Now(), data)
 	)
 
-	return err
+	tx, err := s.db.Begin()
+
+	if err != nil {
+		return err
+	}
+
+	for _, event := range events {
+		var (
+			data   = event.JSON()
+			_, err = tx.Exec(sqlStatement, uuid.New(), personId, event.Type(), time.Now(), data)
+		)
+
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	return tx.Commit()
 }
 
 func (s *DatabaseStorage) FetchPerson(personId uuid.UUID) (*person.Person, error) {

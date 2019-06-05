@@ -18,12 +18,12 @@ func NewMemoryStorage() *MemoryStorage {
 	}
 }
 
-func (m *MemoryStorage) StoreEvent(personId uuid.UUID, event person.PersonEvent) error {
+func (m *MemoryStorage) StoreEvent(personId uuid.UUID, events ...person.PersonEvent) error {
 	if _, exists := m.storage[personId]; !exists {
 		m.storage[personId] = []person.PersonEvent{}
 	}
 
-	m.storage[personId] = append(m.storage[personId], event)
+	m.storage[personId] = append(m.storage[personId], events...)
 
 	return nil
 }

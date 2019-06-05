@@ -7,7 +7,7 @@ import (
 
 	"github.com/esdrasbeleza/eventsourcing/eventsourcing/person"
 	"github.com/esdrasbeleza/eventsourcing/eventsourcing/storage"
-	
+
 	"github.com/google/uuid"
 )
 
@@ -23,21 +23,28 @@ func (c *PersonController) CreatePerson(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	var input person.ChangePersonName
+	var input struct {
+		Name  string
+		Email string
+	}
 
 	if err := json.Unmarshal(requestBody, &input); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	uuid := uuid.New()
+	var (
+		uuid       = uuid.New()
+		changeName = person.ChangePersonName{Name: input.Name}
+		addEmail   = person.AddEmail{Email: input.Email}
+	)
 
-	if err := c.storage.StoreEvent(uuid, input); err != nil {
+	if err := c.storage.StoreEvent(uuid, changeName, addEmail); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	response := person.GetPerson([]person.PersonEvent{input})
+	response := person.GetPerson([]person.PersonEvent{changeName, addEmail})
 	response.Id = uuid
 
 	responseBody, _ := json.Marshal(response)
