@@ -97,5 +97,4 @@ Temporary Items
 .history
 
 # Ignore binary
-eventsourcing
-
+backend
