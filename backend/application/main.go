@@ -1,6 +1,9 @@
 package application
 
-import "net/http"
+import (
+	"log"
+	"net/http"
+)
 
 func Start() {
 	var (
@@ -8,5 +11,5 @@ func Start() {
 		handler = Handler(db)
 	)
 
-	http.ListenAndServe(":8080", handler)
+	log.Fatal(http.ListenAndServe(":8080", handler))
 }
