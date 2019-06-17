@@ -2,6 +2,7 @@ package application
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -11,35 +12,78 @@ import (
 	"github.com/esdrasbeleza/eventsourcing/backend/storage"
 
 	"github.com/google/uuid"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/suite"
 )
 
-func Test_CanCreateAPerson(t *testing.T) {
-	db := DB()
-	handler := Handler(db)
-	httpServer := httptest.NewServer(handler)
-	defer httpServer.Close()
+func TestPersonController(t *testing.T) {
+	suite.Run(t, new(PersonControlerSuite))
+}
 
-	body, _ := json.Marshal(map[string]string{
-		"Name":  "Esdras",
-		"Email": "test@test.com",
-	})
+type PersonControlerSuite struct {
+	suite.Suite
+	db         *sql.DB
+	handler    http.Handler
+	storage    *storage.DatabaseStorage
+	httpServer *httptest.Server
+}
 
-	response, _ := http.Post(httpServer.URL+"/person", "application/json", bytes.NewReader(body))
+func (s *PersonControlerSuite) SetupSuite() {
+	s.db = DB()
+	s.handler = Handler(s.db)
+	s.storage = storage.NewDatabaseStorage(s.db)
+	s.httpServer = httptest.NewServer(s.handler)
+}
+
+func (s *PersonControlerSuite) TearDownSuite() {
+	if s.httpServer != nil {
+		s.httpServer.Close()
+	}
+}
+
+func (s *PersonControlerSuite) createPerson(body []byte) (*http.Response, map[string]string) {
+	response, _ := http.Post(s.httpServer.URL+"/person", "application/json", bytes.NewReader(body))
 
 	var responseMap map[string]string
 	responseBody, _ := ioutil.ReadAll(response.Body)
 	json.Unmarshal(responseBody, &responseMap)
 
-	assert.Equal(t, http.StatusCreated, response.StatusCode)
-	assert.Equal(t, "Esdras", responseMap["Name"])
-	assert.Equal(t, "test@test.com", responseMap["Email"])
+	return response, responseMap
+}
+
+func (s *PersonControlerSuite) Test_CanCreateAPerson() {
+	body, _ := json.Marshal(map[string]string{
+		"Name":  "Esdras",
+		"Email": "test@test.com",
+	})
+
+	response, responseMap := s.createPerson(body)
+
+	s.Equal(http.StatusCreated, response.StatusCode)
+	s.Equal("Esdras", responseMap["Name"])
+	s.Equal("test@test.com", responseMap["Email"])
 
 	personId := uuid.MustParse(responseMap["Id"])
 
-	storage := storage.NewDatabaseStorage(db)
-	storedPerson, _ := storage.FetchPerson(personId)
+	storedPerson, _ := s.storage.FetchPerson(personId)
 
-	assert.Equal(t, "Esdras", storedPerson.Name)
-	assert.Equal(t, "test@test.com", storedPerson.Email)
+	s.Equal("Esdras", storedPerson.Name)
+	s.Equal("test@test.com", storedPerson.Email)
+}
+
+func (s *PersonControlerSuite) Test_CanReadAPerson() {
+	body, _ := json.Marshal(map[string]string{
+		"Name":  "Beleza",
+		"Email": "test2@test.com",
+	})
+
+	_, createdPerson := s.createPerson(body)
+
+	getUserResponse, _ := http.Get(s.httpServer.URL + "/person/" + createdPerson["Id"])
+
+	var responseMap map[string]string
+	responseBody, _ := ioutil.ReadAll(getUserResponse.Body)
+	json.Unmarshal(responseBody, &responseMap)
+
+	s.Equal("Beleza", responseMap["Name"])
+	s.Equal("test2@test.com", responseMap["Email"])
 }
