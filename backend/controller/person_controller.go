@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 
 	"github.com/esdrasbeleza/eventsourcing/backend/person"
@@ -19,6 +20,7 @@ func (c *PersonController) CreatePerson(w http.ResponseWriter, r *http.Request) 
 	requestBody, err := ioutil.ReadAll(r.Body)
 
 	if err != nil {
+		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -40,6 +42,7 @@ func (c *PersonController) CreatePerson(w http.ResponseWriter, r *http.Request) 
 	)
 
 	if err := c.Storage.StoreEvent(uuid, changeName, addEmail); err != nil {
+		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
