@@ -1,0 +1,15 @@
+version: '3'
+services:
+  postgres:
+    build: ./database
+    ports:
+      - "5432:5432"
+  
+  backend:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      - DATABASE_HOST=postgres
+    ports:
+      - "8081:8081"
