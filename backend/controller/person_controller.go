@@ -8,6 +8,7 @@ import (
 
 	"github.com/esdrasbeleza/eventsourcing/backend/person"
 	"github.com/esdrasbeleza/eventsourcing/backend/storage"
+	"github.com/gorilla/mux"
 
 	"github.com/google/uuid"
 )
@@ -53,5 +54,18 @@ func (c *PersonController) CreatePerson(w http.ResponseWriter, r *http.Request) 
 	responseBody, _ := json.Marshal(response)
 
 	w.WriteHeader(http.StatusCreated)
+	w.Write(responseBody)
+}
+
+func (c *PersonController) GetPerson(w http.ResponseWriter, r *http.Request) {
+	var (
+		vars            = mux.Vars(r)
+		uuidStr         = vars["id"]
+		uuid, _         = uuid.Parse(uuidStr)
+		person, _       = c.Storage.FetchPerson(uuid)
+		responseBody, _ = json.Marshal(person)
+	)
+
+	w.WriteHeader(http.StatusOK)
 	w.Write(responseBody)
 }

@@ -82,7 +82,7 @@ func (s *PersonControlerSuite) Test_CanReadAPerson() {
 
 	var responseMap map[string]string
 	responseBody, _ := ioutil.ReadAll(getUserResponse.Body)
-	json.Unmarshal(responseBody, &responseMap)
+	s.Nil(json.Unmarshal(responseBody, &responseMap))
 
 	s.Equal("Beleza", responseMap["Name"])
 	s.Equal("test2@test.com", responseMap["Email"])
