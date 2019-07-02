@@ -20,6 +20,7 @@ func Handler(db *sql.DB) http.Handler {
 
 	router.HandleFunc("/person", controller.CreatePerson).Methods(http.MethodPost)
 	router.HandleFunc("/person/{id}", controller.GetPerson).Methods(http.MethodGet)
+	router.HandleFunc("/person/{id}/address", controller.AddAddress).Methods(http.MethodPost)
 
 	return router
 }

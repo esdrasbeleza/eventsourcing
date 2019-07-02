@@ -43,6 +43,10 @@ func (s *PersonControlerSuite) TearDownSuite() {
 func (s *PersonControlerSuite) createPerson(body []byte) (*http.Response, map[string]string) {
 	response, _ := http.Post(s.httpServer.URL+"/person", "application/json", bytes.NewReader(body))
 
+	if !s.Equal(http.StatusCreated, response.StatusCode) {
+		panic("Fail")
+	}
+
 	var responseMap map[string]string
 	responseBody, _ := ioutil.ReadAll(response.Body)
 	json.Unmarshal(responseBody, &responseMap)
@@ -86,4 +90,25 @@ func (s *PersonControlerSuite) Test_CanReadAPerson() {
 
 	s.Equal("Beleza", responseMap["Name"])
 	s.Equal("test2@test.com", responseMap["Email"])
+}
+
+func (s *PersonControlerSuite) Test_CanAddAnAddress() {
+	body, _ := json.Marshal(map[string]string{
+		"Name":  "Beleza",
+		"Email": "test2@test.com",
+	})
+
+	_, createdPerson := s.createPerson(body)
+
+	addressBody, _ := json.Marshal(map[string]string{
+		"Name":    "Home",
+		"Address": "Some flat and postcode",
+	})
+
+	url := s.httpServer.URL + "/person/" + createdPerson["Id"] + "/address"
+	postAddressResponse, _ := http.Post(url, "application/json", bytes.NewReader(addressBody))
+	responseBody, _ := ioutil.ReadAll(postAddressResponse.Body)
+
+	s.Equal(http.StatusCreated, postAddressResponse.StatusCode)
+	s.JSONEq(string(addressBody), string(responseBody))
 }

@@ -69,3 +69,39 @@ func (c *PersonController) GetPerson(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(responseBody)
 }
+
+func (c *PersonController) AddAddress(w http.ResponseWriter, r *http.Request) {
+	var (
+		vars          = mux.Vars(r)
+		uuidStr       = vars["id"]
+		personId, err = uuid.Parse(uuidStr)
+	)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	requestBody, err := ioutil.ReadAll(r.Body)
+
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	var event person.AddAddress
+
+	if err := json.Unmarshal(requestBody, &event); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if err := c.Storage.StoreEvent(personId, event); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	w.Write(event.JSON())
+}
