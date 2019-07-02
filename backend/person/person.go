@@ -6,7 +6,7 @@ type Person struct {
 	Id      uuid.UUID
 	Name    string
 	Email   string
-	Address map[string]interface{}
+	Address map[string]string
 }
 
 func NewPerson() *Person {

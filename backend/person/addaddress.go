@@ -11,7 +11,7 @@ func (event AddAddress) Type() string {
 
 func (event AddAddress) Apply(person *Person) {
 	if person.Address == nil {
-		person.Address = make(map[string]interface{})
+		person.Address = make(map[string]string)
 	}
 
 	person.Address[event.Name] = event.Address

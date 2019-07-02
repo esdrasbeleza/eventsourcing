@@ -12,7 +12,7 @@ var sampleRemoveAddressEvent = RemoveAddress{Name: "Home"}
 func Test_RemoveAddress(t *testing.T) {
 	person := GetPerson([]PersonEvent{sampleAddAddressEvent, sampleRemoveAddressEvent})
 
-	assert.Nil(t, person.Address["Home"])
+	assert.Empty(t, person.Address["Home"])
 }
 
 func Test_RemoveAddress_JSON(t *testing.T) {

@@ -10,7 +10,7 @@ func (event RemoveAddress) Type() string {
 
 func (e RemoveAddress) Apply(person *Person) {
 	if person.Address == nil {
-		person.Address = make(map[string]interface{})
+		person.Address = make(map[string]string)
 		return
 	}
 
