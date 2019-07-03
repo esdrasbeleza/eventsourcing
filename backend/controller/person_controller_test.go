@@ -8,14 +8,22 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/suite"
 
 	"github.com/esdrasbeleza/eventsourcing/backend/person"
 	"github.com/esdrasbeleza/eventsourcing/backend/storage"
-	"github.com/google/uuid"
-	"github.com/stretchr/testify/assert"
 )
 
-func Test_ItCanCreateAPerson(t *testing.T) {
+func TestPersonController(t *testing.T) {
+	suite.Run(t, new(PersonControlerSuite))
+}
+
+type PersonControlerSuite struct {
+	suite.Suite
+}
+
+func (s *PersonControlerSuite) Test_ItCanCreateAPerson() {
 	var (
 		storage    = storage.NewMemoryStorage()
 		controller = &PersonController{storage}
@@ -32,17 +40,17 @@ func Test_ItCanCreateAPerson(t *testing.T) {
 
 	controller.CreatePerson(recorder, request)
 
-	assert.Equal(t, http.StatusCreated, recorder.Result().StatusCode)
+	s.Equal(http.StatusCreated, recorder.Result().StatusCode)
 
 	var responseJSON map[string]string
 	json.Unmarshal(recorder.Body.Bytes(), &responseJSON)
 
-	assert.NotPanics(t, func() { uuid.MustParse(responseJSON["Id"]) })
-	assert.Equal(t, "Esdras", responseJSON["Name"])
-	assert.Equal(t, "test@test.com", responseJSON["Email"])
+	s.NotPanics(func() { uuid.MustParse(responseJSON["Id"]) })
+	s.Equal("Esdras", responseJSON["Name"])
+	s.Equal("test@test.com", responseJSON["Email"])
 }
 
-func Test_ItCanReadAPerson(t *testing.T) {
+func (s *PersonControlerSuite) Test_ItCanReadAPerson() {
 	var (
 		uuid       = uuid.New()
 		storage    = storage.NewMemoryStorage()
@@ -68,12 +76,12 @@ func Test_ItCanReadAPerson(t *testing.T) {
 	var responseJSON map[string]string
 	json.Unmarshal(recorder.Body.Bytes(), &responseJSON)
 
-	assert.Equal(t, http.StatusOK, recorder.Result().StatusCode)
-	assert.Equal(t, "Esdras", responseJSON["Name"])
-	assert.Equal(t, "test@test.com", responseJSON["Email"])
+	s.Equal(http.StatusOK, recorder.Result().StatusCode)
+	s.Equal("Esdras", responseJSON["Name"])
+	s.Equal("test@test.com", responseJSON["Email"])
 }
 
-func Test_AddAddress_ReturnsExpectedAddress(t *testing.T) {
+func (s *PersonControlerSuite) Test_AddAddress_ReturnsExpectedAddress() {
 	var (
 		uuid       = uuid.New()
 		storage    = storage.NewMemoryStorage()
@@ -104,10 +112,10 @@ func Test_AddAddress_ReturnsExpectedAddress(t *testing.T) {
 	var responseJSON map[string]string
 	json.Unmarshal(recorder.Body.Bytes(), &responseJSON)
 
-	assert.Equal(t, http.StatusCreated, recorder.Result().StatusCode)
-	assert.Equal(t, "Home", responseJSON["Name"])
-	assert.Equal(t, "Address", responseJSON["Address"])
+	s.Equal(http.StatusCreated, recorder.Result().StatusCode)
+	s.Equal("Home", responseJSON["Name"])
+	s.Equal("Address", responseJSON["Address"])
 
 	updatedPerson, _ := storage.FetchPerson(uuid)
-	assert.Equal(t, "Address", updatedPerson.Address["Home"])
+	s.Equal("Address", updatedPerson.Address["Home"])
 }
