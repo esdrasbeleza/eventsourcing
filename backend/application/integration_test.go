@@ -15,11 +15,11 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-func TestPersonController(t *testing.T) {
-	suite.Run(t, new(PersonControlerSuite))
+func TestIntegration(t *testing.T) {
+	suite.Run(t, new(IntegrationTestSuite))
 }
 
-type PersonControlerSuite struct {
+type IntegrationTestSuite struct {
 	suite.Suite
 	db         *sql.DB
 	handler    http.Handler
@@ -27,20 +27,20 @@ type PersonControlerSuite struct {
 	httpServer *httptest.Server
 }
 
-func (s *PersonControlerSuite) SetupSuite() {
+func (s *IntegrationTestSuite) SetupSuite() {
 	s.db = DB()
 	s.handler = Handler(s.db)
 	s.storage = storage.NewDatabaseStorage(s.db)
 	s.httpServer = httptest.NewServer(s.handler)
 }
 
-func (s *PersonControlerSuite) TearDownSuite() {
+func (s *IntegrationTestSuite) TearDownSuite() {
 	if s.httpServer != nil {
 		s.httpServer.Close()
 	}
 }
 
-func (s *PersonControlerSuite) createPerson(body []byte) (*http.Response, map[string]string) {
+func (s *IntegrationTestSuite) createPerson(body []byte) (*http.Response, map[string]string) {
 	response, _ := http.Post(s.httpServer.URL+"/person", "application/json", bytes.NewReader(body))
 
 	if !s.Equal(http.StatusCreated, response.StatusCode) {
@@ -54,7 +54,7 @@ func (s *PersonControlerSuite) createPerson(body []byte) (*http.Response, map[st
 	return response, responseMap
 }
 
-func (s *PersonControlerSuite) Test_CanCreateAPerson() {
+func (s *IntegrationTestSuite) Test_CanCreateAPerson() {
 	body, _ := json.Marshal(map[string]string{
 		"Name":  "Esdras",
 		"Email": "test@test.com",
@@ -74,7 +74,7 @@ func (s *PersonControlerSuite) Test_CanCreateAPerson() {
 	s.Equal("test@test.com", storedPerson.Email)
 }
 
-func (s *PersonControlerSuite) Test_CanReadAPerson() {
+func (s *IntegrationTestSuite) Test_CanReadAPerson() {
 	body, _ := json.Marshal(map[string]string{
 		"Name":  "Beleza",
 		"Email": "test2@test.com",
@@ -92,7 +92,7 @@ func (s *PersonControlerSuite) Test_CanReadAPerson() {
 	s.Equal("test2@test.com", responseMap["Email"])
 }
 
-func (s *PersonControlerSuite) Test_CanAddAnAddress() {
+func (s *IntegrationTestSuite) Test_CanAddAnAddress() {
 	body, _ := json.Marshal(map[string]string{
 		"Name":  "Beleza",
 		"Email": "test2@test.com",
